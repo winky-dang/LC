@@ -1,0 +1,71 @@
+题目描述：
+参考：labuladong手把手带你刷二叉树（第二期）
+java代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return build(inorder,0,inorder.length-1,postorder,0,postorder.length-1);
+    }
+    TreeNode build(int[] inorder,int inStart,int inEnd, int[] postorder, int postStart,int postEnd){
+        if(inStart>inEnd)
+            return null;
+        // root节点对应的值就是后序遍历数组的最后一个元素
+        int rootVal = postorder[postEnd];
+        //寻找rootVal在中序遍历数组中的索引
+        int index = 0;
+        for(int i=inStart;i<=inEnd;i++){
+            if(inorder[i]==rootVal){
+                index = i;
+                break;
+            }
+        }
+        //左子树的节点个数
+        int leftSize = index-inStart;
+        TreeNode root = new TreeNode(rootVal);
+        //递归构造左右子树
+        root.left = build(inorder,inStart,index-1,postorder,postStart,postStart+leftSize-1);
+        root.right = build(inorder,index+1,inEnd,postorder,postStart+leftSize,postEnd-1);
+        return root;
+    }
+}
+
+Python代码：
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        return self.build(inorder,0,len(inorder)-1,postorder,0,len(postorder)-1)
+
+    def build(self,inorder,inStart,inEnd,postorder,postStart,postEnd):
+        if inStart>inEnd:
+            return None
+        rootVal = postorder[postEnd]
+        index = 0
+        for i in range(inStart,inEnd+1):
+            if inorder[i]==rootVal:
+                index = i
+                break
+        root = TreeNode(rootVal)
+        leftSize = index-inStart
+        root.left = self.build(inorder,inStart,index-1,postorder,postStart,postStart+leftSize-1)
+        root.right = self.build(inorder,index+1,inEnd,postorder,postStart+leftSize,postEnd-1)
+        return root
+        
